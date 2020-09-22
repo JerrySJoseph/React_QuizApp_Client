@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './style.css';
+import App from './components/App';
 
-let element=<div>Welcom to quiz</div>
+let element=<App/>
 ReactDOM.render(
   element,
   document.getElementById('root')
