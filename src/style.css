@@ -22,7 +22,6 @@ body {
 .app {
   background-color: #252d4a;
   min-width: 400px;
-  max-width: 600px;
   min-height: 200px;
 
   height: min-content;
@@ -103,6 +102,7 @@ button {
   align-items: center;
   border: 2px solid #234668;
   cursor: pointer;
+  margin:5px;
 }
 
 .correct {

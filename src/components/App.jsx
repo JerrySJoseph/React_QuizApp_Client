@@ -7,12 +7,13 @@ import Questions from './questions';
 export default function App() {
 
     return <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <div className="app">
-            <Switch>
-                <Route path="/" component={LoginForm} />
-                <Route path="/quiz" component={Questions} />
-                <Route component={<div>404 Page not found</div>} />
-            </Switch>
-        </div>
-    </BrowserRouter>;
+        <div className="app">    
+      <Switch>
+        <Route path="/" component={LoginForm} exact />
+        <Route path="/quiz" component={Questions} />
+        
+      </Switch>
+    
+    </div>
+  </BrowserRouter>;
 }

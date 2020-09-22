@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 
 import '../style.css';
 import '../loader.css';
@@ -14,7 +14,7 @@ export default function LoginForm()
     const [topics,settopics]=useState([]);
       useEffect(() => {
         setloading(true);
-        const apiUrl = `http://localhost:5000/topics`;
+        const apiUrl = `http://localhost:5000/api/topics`;
         fetch(apiUrl)
             .then((res)=>res.json())
             .then(({count,topics}) => {
@@ -49,9 +49,9 @@ export default function LoginForm()
                 topics.map((topic)=><option value={topic}>{topic}</option>)
               }
           </select>
-          <Link to={process.env.PUBLIC_URL+`/quiz/name=${name}&topic=${topic}`}>
+          <Link to={process.env.PUBLIC_URL+`/quiz?name=${name}&topic=${topic}`}>
           
- <button class="abutton" ><span>Start Quiz</span></button>
+ <button className="abutton" ><span>Start Quiz</span></button>
           </Link>
                
          
