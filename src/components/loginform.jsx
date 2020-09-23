@@ -53,8 +53,8 @@ export default function LoginForm() {
                                 topics.map((topic) => <option selected value={topic}>{topic}</option>)
                             }
                         </select>
-                        <Link to={process.env.PUBLIC_URL + `/quiz?name=${name}&topic=${topic}`}>
-                            <button className="abutton" ><span>Start Quiz</span></button>
+                        <Link to={`/quiz?name=${name}&topic=${topic}`}>
+                            <button className="abutton" onClick={(e)=>validate(e,name,topic)}><span>Start Quiz</span></button>
                         </Link>
 
 
@@ -62,4 +62,14 @@ export default function LoginForm() {
             }
 
         </div></>
+        
+}
+const validate=(event,name,room)=>{
+    if(!name || !room)
+    {
+        event.preventDefault()
+        alert("All fields are mandatory");
+    }
+    
+    
 }

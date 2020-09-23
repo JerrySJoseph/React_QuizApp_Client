@@ -176,7 +176,7 @@ class ResultView extends Component {
             <div className='question-count'>
                 <span>You have Scored {this.props.score}</span>/{this.props.size}
             </div>
-            <Link to={process.env.PUBLIC_URL + `/`}>
+            <Link to={ `/`}>
                             <button className="abutton" ><span>Try Again</span></button>
                         </Link>
         </div>);
