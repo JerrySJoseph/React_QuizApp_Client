@@ -2,8 +2,10 @@ import React, { useEffect, useState, Component } from 'react';
 import '../style.css';
 import querystring from 'query-string'
 import '../star.png';
+import { Link } from 'react-router-dom';
 
-const APIENDPOINT_QUESTIONS="http://localhost:5000/api/questions/";
+const ENDPOINT_ROOT="https://quiz-app-server-nodejs.herokuapp.com/";
+const APIENDPOINT_QUESTIONS=ENDPOINT_ROOT+"api/questions/";
 class Questions extends Component {
     constructor(props) {
         super(props);
@@ -174,6 +176,9 @@ class ResultView extends Component {
             <div className='question-count'>
                 <span>You have Scored {this.props.score}</span>/{this.props.size}
             </div>
+            <Link to={process.env.PUBLIC_URL + `/`}>
+                            <button className="abutton" ><span>Try Again</span></button>
+                        </Link>
         </div>);
     }
 }
