@@ -27,6 +27,7 @@ export default function LoginForm() {
     }, []);
 
     return <><div className="question-section">
+        <img className='star-img' src={require('../trophy.png')} />
         <div className='question-count'>
             <span>Welcome to Quiz</span>
         </div>
