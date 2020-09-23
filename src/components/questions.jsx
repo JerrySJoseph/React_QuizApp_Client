@@ -2,6 +2,8 @@ import React, { useEffect, useState, Component } from 'react';
 import '../style.css';
 import querystring from 'query-string'
 import '../star.png';
+
+const APIENDPOINT_QUESTIONS="http://localhost:5000/api/questions/";
 class Questions extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +18,7 @@ class Questions extends Component {
         };
     }
     componentDidMount() {
-        fetch("http://localhost:5000/api/questions/" + this.state.topic)
+        fetch(APIENDPOINT_QUESTIONS + this.state.topic)
             .then(res => res.json())
             .then(
                 (result) => {

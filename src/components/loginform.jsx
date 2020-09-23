@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+const APIENDPOINT_TOPICS=`http://localhost:5000/api/topics`;
+
 export default function LoginForm() {
     const [loading, setloading] = useState(true);
     const [name, setName] = useState('');
@@ -13,7 +15,7 @@ export default function LoginForm() {
     const [topics, settopics] = useState([]);
     useEffect(() => {
         setloading(true);
-        const apiUrl = `http://localhost:5000/api/topics`;
+        const apiUrl = APIENDPOINT_TOPICS;
         fetch(apiUrl)
             .then((res) => res.json())
             .then(({ count, topics }) => {
@@ -50,7 +52,6 @@ export default function LoginForm() {
                             }
                         </select>
                         <Link to={process.env.PUBLIC_URL + `/quiz?name=${name}&topic=${topic}`}>
-
                             <button className="abutton" ><span>Start Quiz</span></button>
                         </Link>
 
