@@ -20,6 +20,7 @@ export default function LoginForm()
             .then(({count,topics}) => {
                 console.log(topics)
                settopics(topics);
+               settopic(topics[0]);
                setloading(false);
             });
       },[]);
@@ -43,10 +44,10 @@ export default function LoginForm()
                       <div className='question-count'>
               <span>Get Started</span>
           </div>
-          <input type="text" placeholder="type your name" onChange={(e)=>setName(e.target.value)} />
-          <select id="topic" name="topic" onChange={(e)=>settopic(e.target.value)}>
+          <input type="text" placeholder="type your name"  onChange={(e)=>setName(e.target.value)} />
+          <select id="topic"  name="topic" defaultValue={topics[0]} onChange={(e)=>settopic(e.target.value) } onselect={(e)=>settopic(e.target.value)}>
               {
-                topics.map((topic)=><option value={topic}>{topic}</option>)
+                topics.map((topic)=><option selected value={topic}>{topic}</option>)
               }
           </select>
           <Link to={process.env.PUBLIC_URL+`/quiz?name=${name}&topic=${topic}`}>

@@ -1,18 +1,22 @@
 import React, { useEffect, useState,Component } from 'react';
 import '../style.css';
 import querystring from 'query-string'
-
+import '../star.png';
 class Questions extends Component {
     constructor(props) {
         super(props);
+     //   const location= useLocation();
+        const { name, topic } = querystring.parse(this.props.location.search);
         this.state = {
+            name:name,
+            topic:topic,
             error: null,
             isLoaded: false,
             items: []
         };
     }
     componentDidMount() {
-        fetch("http://localhost:5000/api/topics/questions")
+        fetch("http://localhost:5000/api/questions/"+this.state.topic)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -33,131 +37,147 @@ class Questions extends Component {
             )
     }
     render() {
-        const { error, items, isLoaded } = this.state;
-
+        const { error, items, isLoaded ,name} = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
             return <div>Loading...</div>;
-        } else {
+        } else if(items.length<1)
+        return <div>No questions for this topic</div>;
+        
+        else {
             return (
-                <ul>
-          {items.map(item => (
-            <li key={item.name}>
-              {item.name} {item.price}
-            </li>
-          ))}
-        </ul>
+               <QuestionView
+               questions={items}
+               name={name}/>
             );
         }
     }
 }
 
 export default Questions;
-/*
-export default function Questions({ location }) {
 
-    const [name, setName] = useState('');
-    const [topic, setTopic] = useState('');
-    const [loading, setloading] = useState(true);
-    const [questions, setQuestions] = useState([])
+class QuestionView extends Component {
 
-
-
-
-    useEffect(() => {
-        const { name, topic } = querystring.parse(location.search);
-        setName(name);
-        setTopic(topic)
-        console.info('set topic');
-        fetchQuestions();
-        console.info('finish use effect with topic and name');
-    }, []);
-
-
-
-    function fetchQuestions() {
-        setloading(true);
-        console.info('FQ set loading');
-        const apiUrl = `http://localhost:5000/api/topics/questions`;
-        fetch(apiUrl)
-            .then((res) => res.json())
-            .then(({ count, questions }) => {
-                console.log(questions)
-                setQuestions(questions);
-                setloading(false);
-                console.info('set Loading false');
-
-            });
+    response=[];
+    constructor(props) {
+        super(props);
+       
+        this.state = { 
+            name:this.props.name,
+            questions:this.props.questions,
+            showResult:false,
+            response:[],
+            currentQuestion:this.props.questions[0],
+            index:0,
+            score:0
+         }
     }
-
-    let element = QuestionsView(questions);
-    return <>{loading ? <>Loading</> : element}</>;
-}
-*/
-export function QuestionsView(questions) {
-
-    const [showResult, setShowResult] = useState(false);
-    const [response, setResponse] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
-    const [index, setIndex] = useState(0);
-    const [score, setScore] = useState(0);
-
-    useEffect(() => {
-        if (index < questions.length) {
-            setCurrentQuestion(questions[index]);
+    setResponse(value){
+       this.response= [...this.response,value];
+    }
+    setIndex(value)
+    {
+        this.setState({index:value});
+    }
+    setShowResult(value)
+    {
+        this.setState({showResult:value});
+    }
+    setScore(value)
+    {
+        this.setState({score:value});
+    }
+    setCurrentQuestion(value)
+    {
+        this.setState({currentQuestion:value});
+    }
+     handleOptionClick(event){
+        const{index,currentQuestion,questions,response}=this.state;
+        event.preventDefault();
+        let newindex=index+1;
+        let selected = event.target.id;
+        this.setResponse(selected)
+        console.info(this.response)
+        if (newindex<questions.length) {
+            
+            console.info('index:'+newindex);
+            this.setIndex(newindex)
+            this.setCurrentQuestion(questions[newindex]);
+            console.log(currentQuestion)
+            console.info('index after:'+newindex);
         }
         else {
-            setScore(getResult())
-            setShowResult(true);
+            this.setScore(this.getResult())
+            this.setShowResult(true);
         }
-
-    }, [index, questions])
-    function handleOptionClick(event) {
-        event.preventDefault();
-        if (index < questions.length + 1) {
-            let selected = event.target.id;
-            setResponse(response.concat(selected));
-            setIndex(index + 1);
-        }
+       
 
     }
-    function getResult() {
+     getResult() {
+        const{index,score,currentQuestion,showResult,questions}=this.state;
         let correct = 0;
-        let index = 0;
+        let i = 0;
         questions.map((question) => {
-            console.info(`${question.answer},${response[index]},${question.answer === response[index]}`)
-            if (question.answer === response[index])
+            console.info(`${question.answer},${this.response[i]},${question.answer === this.response[i]}`)
+            if (question.answer === this.response[i])
                 correct++;
-            index++;
+            i++;
         })
-        console.info(response)
+        console.info(this.response)
         console.info(questions)
         console.info(score)
         console.info(correct)
         return correct;
     }
 
-    return <>
-        {showResult ? <div>You Scored {score}/{questions.length}</div> : <><div className="question-section">
-            <div className='question-count'>
-                <span>Question {index + 1}</span>/{questions.length + 1}
-            </div>
-            <div className='question-text'>{index + 1}. {currentQuestion.question}</div>
+    
+    render() { 
+        const{index,score,currentQuestion,showResult,questions,response}=this.state;
+    return (<>{showResult?<ResultView 
+    size={questions.length} 
+    score={this.state.score}
+    name={this.state.name}/>:<><div className="question-section">
+       
+        <div className='question-count'>
+            <span>Question {index + 1}</span>/{questions.length}
         </div>
-            <div className="answer-section">
-                <div className='question-count'>
-                    <span>Options:</span>
-                </div>
-                <div>
-                    {
-                        currentQuestion.options.map((option) => {
-                            return <button className='button' key={option} id={option} onClick={(e) => handleOptionClick(e)}>{option}</button>
-                        })
-                    }
-                </div>
+        <div className='question-text'>{index + 1}. {this.state.currentQuestion.question}</div>
+      
+    </div>
+        <div className="answer-section">
+            <div className='question-count'>
+                <span>Options:</span>
+            </div>
+            
+            <div>
+                {
+                    this.state.currentQuestion.options.map((option) => {
+                        return <button className='button' key={option} id={option} onClick={(e) => this.handleOptionClick(e)}>{option}</button>
+                    })
+                }
+            </div>
 
-            </div></>}
-
-    </>;
+            </div></>}</> );
+    }
 }
+ class ResultView extends Component {
+     constructor(props) {
+         super(props);
+         this.state = { 
+          }
+     }
+     render() { 
+         return ( <div className='result-container'>
+             <div className='question-count'>
+             <span>Congrats {this.props.name}!</span>
+             </div>
+            <img className='star-img'src={ require('../star.png') } />
+             <div className='question-count'>
+             <span>You have Scored {this.props.score}</span>/{this.props.size}
+             </div>
+         </div> );
+     }
+ }
+  
+
